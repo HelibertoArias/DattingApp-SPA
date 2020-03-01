@@ -1,8 +1,13 @@
-import { Component,
+import {
+  Component,
   OnInit,
   Input,
   Output,
-  EventEmitter } from '@angular/core';
+  EventEmitter
+} from '@angular/core';
+
+import { AuthService } from '../_services/auth.service';
+import { error } from 'protractor';
 
 
 @Component({
@@ -12,7 +17,7 @@ import { Component,
 })
 export class RegisterComponent implements OnInit {
 
-  @Input() valuesFromHome: any;
+
 
   @Output() cancelRegister = new EventEmitter();
 
@@ -21,12 +26,23 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
   }
-  constructor() {
+
+  constructor(private authService: AuthService) {
     console.log('runnig')
   }
 
   register(){
+    this.authService
+      .register(this.model)
+      .subscribe(
 
+        next =>{
+          console.log('registration done!' )
+        },
+        error =>{
+          console.log(error);
+        }
+      );
   }
 
   cancel(){
