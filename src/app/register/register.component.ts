@@ -8,6 +8,7 @@ import {
 
 import { AuthService } from '../_services/auth.service';
 import { error } from 'protractor';
+import { AlertifyService } from '../_services/alertify.service';
 
 
 @Component({
@@ -27,7 +28,8 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService,
+              private alertify: AlertifyService) {
     console.log('runnig')
   }
 
@@ -37,10 +39,10 @@ export class RegisterComponent implements OnInit {
       .subscribe(
 
         next =>{
-          console.log('registration done!' )
+          this.alertify.success('registration done!' )
         },
         error =>{
-          console.log(error);
+          this.alertify.error(error);
         }
       );
   }
