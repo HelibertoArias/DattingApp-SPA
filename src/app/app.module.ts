@@ -1,4 +1,5 @@
 import { AppComponent } from './app.component';
+import { AuthGuard } from './_guards/auth.guard';
 import { AuthService } from './_services/auth.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
@@ -37,6 +38,8 @@ import { appRoutes } from './routes';
    providers: [
       AuthService,
       ErrorInterceptorProvider
+
+
    ],
    bootstrap: [
       AppComponent
