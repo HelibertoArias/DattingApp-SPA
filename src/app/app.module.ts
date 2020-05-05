@@ -16,6 +16,7 @@ import { NgModule } from '@angular/core';
 import { RegisterComponent } from './register/register.component';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './routes';
+import { UserService } from './_services/user.service';
 
 @NgModule({
    declarations: [
@@ -37,6 +38,7 @@ import { appRoutes } from './routes';
    ],
    providers: [
       AuthService,
+      UserService,
       ErrorInterceptorProvider
 
 
