@@ -1,24 +1,28 @@
 import { AppComponent } from './app.component';
+import { appRoutes } from './routes';
 import { AuthGuard } from './_guards/auth.guard';
 import { AuthService } from './_services/auth.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { BsDropdownModule } from 'ngx-bootstrap';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
-import { FormsModule } from "@angular/forms";
+import { FormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule } from '@angular/common/http';
+import { JwtModule } from '@auth0/angular-jwt';
 import { ListComponent } from './list/list.component';
+import { MemberCardComponent } from './members/member-card/member-card.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { MessagesComponent } from './messages/messages.component';
 import { NavComponent } from './nav/nav.component';
 import { NgModule } from '@angular/core';
 import { RegisterComponent } from './register/register.component';
 import { RouterModule } from '@angular/router';
-import { appRoutes } from './routes';
 import { UserService } from './_services/user.service';
-import { MemberCardComponent } from './members/member-card/member-card.component';
 
+export function tokenGetter(){
+  return localStorage.getItem('token');
+}
 @NgModule({
    declarations: [
       AppComponent,
@@ -36,7 +40,14 @@ import { MemberCardComponent } from './members/member-card/member-card.component
       FormsModule,
       BsDropdownModule.forRoot(),
       BrowserAnimationsModule,
-      RouterModule.forRoot(appRoutes)
+      RouterModule.forRoot(appRoutes),
+      JwtModule.forRoot({
+        config:{
+          tokenGetter: tokenGetter,
+          whitelistedDomains:['localhost:5000'],
+          blacklistedRoutes:['localhost:5000/api/auth']
+        }
+      })
    ],
    providers: [
       AuthService,
