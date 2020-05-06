@@ -19,6 +19,7 @@ import { NgModule } from '@angular/core';
 import { RegisterComponent } from './register/register.component';
 import { RouterModule } from '@angular/router';
 import { UserService } from './_services/user.service';
+import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 
 export function tokenGetter(){
   return localStorage.getItem('token');
@@ -32,7 +33,8 @@ export function tokenGetter(){
       MemberListComponent,
       ListComponent,
       MessagesComponent,
-      MemberCardComponent
+      MemberCardComponent,
+      MemberDetailComponent
    ],
    imports: [
       BrowserModule,
