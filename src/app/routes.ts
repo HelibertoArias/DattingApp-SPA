@@ -6,6 +6,8 @@ import { MemberListComponent } from "./members/member-list/member-list.component
 import { MessagesComponent } from "./messages/messages.component";
 import { Routes } from "@angular/router";
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
+import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
+import { ListMemberResolver } from './_resolvers/list-member.resolver';
 
 export const appRoutes: Routes = [
   { path: "", component: HomeComponent },
@@ -17,11 +19,13 @@ export const appRoutes: Routes = [
       {
         path: "members",
         component: MemberListComponent,
+        resolve: { users : ListMemberResolver},
         canActivate: [AuthGuard]
       },
       {
         path: "members/:id",
         component: MemberDetailComponent,
+        resolve: { user : MemberDetailResolver},
         canActivate: [AuthGuard]
       },
       { path: "messages", component: MessagesComponent },

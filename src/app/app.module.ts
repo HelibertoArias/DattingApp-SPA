@@ -20,6 +20,8 @@ import { NgModule } from '@angular/core';
 import { RegisterComponent } from './register/register.component';
 import { RouterModule } from '@angular/router';
 import { UserService } from './_services/user.service';
+import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
+import { ListMemberResolver } from './_resolvers/list-member.resolver';
 
 export function tokenGetter(){
   return localStorage.getItem('token');
@@ -55,7 +57,9 @@ export function tokenGetter(){
    providers: [
       AuthService,
       UserService,
-      ErrorInterceptorProvider
+      ErrorInterceptorProvider,
+      MemberDetailResolver,
+      ListMemberResolver
 
 
    ],

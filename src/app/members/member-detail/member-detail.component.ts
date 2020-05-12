@@ -18,17 +18,21 @@ export class MemberDetailComponent implements OnInit {
               private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.loaduser();
+    // this.loaduser();
+    // Reading using resolvers
+    this.route.data.subscribe( data => {
+      this.user = data['user'];
+    });
   }
 
-  loaduser(){
-    this.userService.getUser(+this.route.snapshot.params['id'])
-        .subscribe((user:User) =>{
-          this.user = user;
-        },
-        error => {
-          this.altertify.error(error);
-        });
-  }
+  // loaduser(){
+  //   this.userService.getUser(+this.route.snapshot.params['id'])
+  //       .subscribe((user:User) =>{
+  //         this.user = user;
+  //       },
+  //       error => {
+  //         this.altertify.error(error);
+  //       });
+  // }
 
 }
