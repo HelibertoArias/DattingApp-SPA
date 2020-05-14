@@ -3,7 +3,7 @@ import { appRoutes } from './routes';
 import { AuthGuard } from './_guards/auth.guard';
 import { AuthService } from './_services/auth.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
 import { BsDropdownModule, TabsModule } from 'ngx-bootstrap';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
 import { FormsModule } from '@angular/forms';
@@ -22,10 +22,20 @@ import { RouterModule } from '@angular/router';
 import { UserService } from './_services/user.service';
 import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
 import { ListMemberResolver } from './_resolvers/list-member.resolver';
+import { NgxGalleryModule } from 'ngx-gallery';
 
 export function tokenGetter(){
   return localStorage.getItem('token');
 }
+//https://github.com/lukasz-galka/ngx-gallery/issues/242
+export class CustomHammerConfig extends HammerGestureConfig  {
+  overrides = {
+      pinch: { enable: false },
+      rotate: { enable: false }
+  };
+}
+
+
 @NgModule({
    declarations: [
       AppComponent,
@@ -52,16 +62,16 @@ export function tokenGetter(){
           whitelistedDomains:['localhost:5000'],
           blacklistedRoutes:['localhost:5000/api/auth']
         }
-      })
+      }),
+      NgxGalleryModule
    ],
    providers: [
       AuthService,
       UserService,
       ErrorInterceptorProvider,
       MemberDetailResolver,
-      ListMemberResolver
-
-
+      ListMemberResolver,
+      { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig }
    ],
    bootstrap: [
       AppComponent
