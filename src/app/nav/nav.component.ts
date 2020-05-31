@@ -1,16 +1,19 @@
-import { Component, OnInit } from "@angular/core";
-
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { AlertifyService } from "../_services/alertify.service";
 import { AuthService } from "../_services/auth.service";
 import { Router } from "@angular/router";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-nav",
   templateUrl: "./nav.component.html",
-  styleUrls: ["./nav.component.css"]
+  styleUrls: ["./nav.component.css"],
 })
-export class NavComponent implements OnInit {
+export class NavComponent implements OnInit, OnDestroy {
   model: any = {};
+  photoUrl: string;
+
+  photoUrlSubscribe: Subscription;
 
   constructor(
     public authService: AuthService,
@@ -18,14 +21,22 @@ export class NavComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit() {}
+  ngOnDestroy(): void {
+    this.photoUrlSubscribe.unsubscribe();
+  }
+
+  ngOnInit() {
+    this.photoUrlSubscribe = this.authService.photoUrl$.subscribe(
+      (photoUrl) => (this.photoUrl = photoUrl)
+    );
+  }
 
   login() {
     this.authService.login(this.model).subscribe(
-      next => {
+      (next) => {
         this.alertify.success("Logged");
       },
-      error => {
+      (error) => {
         this.alertify.error(error);
       },
       () => {

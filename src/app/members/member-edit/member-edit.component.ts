@@ -6,6 +6,7 @@ import { NgForOfContext } from "@angular/common";
 import { NgForm } from "@angular/forms";
 import { UserService } from "src/app/_services/user.service";
 import { AuthService } from "src/app/_services/auth.service";
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: "app-member-edit",
@@ -26,6 +27,9 @@ export class MemberEditComponent implements OnInit {
   }
   user: User;
 
+  photoUrlSubscribe: Subscription;
+  photoUrl: string;
+
   constructor(
     private route: ActivatedRoute,
     private alertify: AlertifyService,
@@ -33,7 +37,15 @@ export class MemberEditComponent implements OnInit {
     private authService: AuthService
   ) {}
 
+  ngOnDestroy(): void {
+    this.photoUrlSubscribe.unsubscribe();
+  }
+
   ngOnInit() {
+    this.photoUrlSubscribe = this.authService.photoUrl$.subscribe(
+      (photoUrl) => (this.photoUrl = photoUrl)
+    );
+
     this.route.data.subscribe((response) => {
       this.user = response["user"];
     });
@@ -53,7 +65,8 @@ export class MemberEditComponent implements OnInit {
       );
   }
 
-  updateMainPhoto(photoUrl) : void {
-    this.user.photoUrl = photoUrl;
-  }
+  // updateMainPhoto(photoUrl) : void {
+  //   this.user.photoUrl = photoUrl;
+  //   this.authService.changeMemberPhoto(photoUrl);
+  // }
 }
