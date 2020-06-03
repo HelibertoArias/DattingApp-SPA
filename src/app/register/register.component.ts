@@ -1,53 +1,71 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter
-} from '@angular/core';
-
-import { AuthService } from '../_services/auth.service';
-import { error } from 'protractor';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AlertifyService } from '../_services/alertify.service';
-
+import { AuthService } from '../_services/auth.service';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  selector: "app-register",
+  templateUrl: "./register.component.html",
+  styleUrls: ["./register.component.css"],
 })
 export class RegisterComponent implements OnInit {
-
-
-
   @Output() cancelRegister = new EventEmitter();
+  registerForm: FormGroup;
 
-  model :any ={};
-
+  model: any = {};
 
   ngOnInit() {
+    this.createRegisterForm();
   }
 
-  constructor(private authService: AuthService,
-              private alertify: AlertifyService) {
-    console.log('runnig')
+  passwordMatchValidator(g: FormGroup) {
+    return g.get("password").value === g.get("confirmPassword").value
+      ? null
+      : { mismatch: true };
   }
 
-  register(){
-    this.authService
-      .register(this.model)
-      .subscribe(
-
-        next =>{
-          this.alertify.success('registration done!' )
-        },
-        error =>{
-          this.alertify.error(error);
-        }
-      );
+  constructor(
+    private authService: AuthService,
+    private alertify: AlertifyService,
+    private formBuilder: FormBuilder
+  ) {
+    console.log("runnig");
   }
 
-  cancel(){
+  createRegisterForm() {
+    this.registerForm = this.formBuilder.group(
+      {
+        username: ["", Validators.required],
+        password: [
+          "",
+          [
+            Validators.required,
+            Validators.minLength(4),
+            Validators.maxLength(8),
+          ],
+        ],
+        confirmPassword: ["", Validators.required],
+      },
+      { validator: this.passwordMatchValidator }
+    );
+  }
+
+  register() {
+    //Comment to user reactive forms
+    /*
+    this.authService.register(this.model).subscribe(
+      (next) => {
+        this.alertify.success("registration done!");
+      },
+      (error) => {
+        this.alertify.error(error);
+      }
+    );
+    */
+    console.log(this.registerForm);
+  }
+
+  cancel() {
     this.cancelRegister.emit(false);
   }
 }
