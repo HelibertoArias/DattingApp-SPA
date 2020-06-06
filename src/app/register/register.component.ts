@@ -1,7 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { AlertifyService } from '../_services/alertify.service';
-import { AuthService } from '../_services/auth.service';
+import { AlertifyService } from "../_services/alertify.service";
+import { AuthService } from "../_services/auth.service";
+import { BsDatepickerConfig } from "ngx-bootstrap";
+import { User } from "../_models/User";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-register",
@@ -12,10 +15,17 @@ export class RegisterComponent implements OnInit {
   @Output() cancelRegister = new EventEmitter();
   registerForm: FormGroup;
 
-  model: any = {};
+  // model: any = {};
+  user: User;
+
+  bsConfig: Partial<BsDatepickerConfig>;
 
   ngOnInit() {
     this.createRegisterForm();
+
+    this.bsConfig = {
+      containerClass: "theme-red",
+    };
   }
 
   passwordMatchValidator(g: FormGroup) {
@@ -27,7 +37,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private alertify: AlertifyService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router
   ) {
     console.log("runnig");
   }
@@ -35,21 +46,21 @@ export class RegisterComponent implements OnInit {
   createRegisterForm() {
     this.registerForm = this.formBuilder.group(
       {
-        gender: ['male'],
-        username: ['', Validators.required],
-        knownAs: ['', Validators.required],
+        gender: ["male"],
+        username: ["", Validators.required],
+        knownAs: ["", Validators.required],
         dateOfBirth: [null, Validators.required],
-        city: ['', Validators.required],
-        country: ['', Validators.required],
+        city: ["", Validators.required],
+        country: ["", Validators.required],
         password: [
-          '',
+          "",
           [
             Validators.required,
             Validators.minLength(4),
             Validators.maxLength(8),
           ],
         ],
-        confirmPassword: ['', Validators.required],
+        confirmPassword: ["", Validators.required],
       },
       { validator: this.passwordMatchValidator }
     );
@@ -67,7 +78,22 @@ export class RegisterComponent implements OnInit {
       }
     );
     */
-    console.log(this.registerForm);
+    if (this.registerForm.valid) {
+      this.user = Object.assign({}, this.registerForm.value);
+      this.authService.register(this.user).subscribe(
+        (next) => {
+          this.alertify.success("registration done!");
+        },
+        (error) => {
+          this.alertify.error(error);
+        },
+        () => {
+          this.authService.login(this.user).subscribe(() => {
+            this.router.navigate(["/members"]);
+          });
+        }
+      );
+    }
   }
 
   cancel() {
