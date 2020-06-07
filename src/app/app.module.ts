@@ -28,7 +28,7 @@ import { MemberEditResolver } from './_resolvers/member-edit.resolver';
 import { PreventUnsaveChangesGuard } from './_guards/prevent-unsave-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { FileUploadModule } from 'ng2-file-upload';
-
+import { TimeagoModule } from 'ngx-timeago';
 export function tokenGetter(){
   return localStorage.getItem('token');
 }
@@ -54,6 +54,7 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       MemberDetailComponent,
       MemberEditComponent,
       PhotoEditorComponent
+
    ],
    imports: [
       BrowserModule,
@@ -68,6 +69,7 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       RouterModule.forRoot(appRoutes),
       NgxGalleryModule,
       FileUploadModule,
+      TimeagoModule.forRoot(),
       JwtModule.forRoot({
         config:{
           tokenGetter: tokenGetter,
