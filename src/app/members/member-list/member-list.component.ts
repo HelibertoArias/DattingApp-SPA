@@ -37,11 +37,11 @@ export class MemberListComponent implements OnInit {
 
   }
 
-  pageChanged(event: any): void {
-    this.pagination.currentPage = event.page;
-    this.loadUsersPaginated();
+  // pageChanged(event: any): void {
+  //   this.pagination.currentPage = event.page;
+  //   this.loadUsersPaginated();
 
-  }
+  // }
 
   resetFilters(){
     this.userParams.gender = this.user.gender === 'female' ? 'male' : 'female';
